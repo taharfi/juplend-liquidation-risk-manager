@@ -1,38 +1,149 @@
+/* General App Styling */
+:root {
+  --background-color: #121212;
+  --surface-color: #1e1e1e;
+  --primary-text-color: #e0e0e0;
+  --secondary-text-color: #a0a0a0;
+  --border-color: #333;
+  --accent-color: #bb86fc;
+  --risk-low: #00c853;
+  --risk-medium: #ffab00;
+  --risk-high: #ff5252;
+  --risk-very-high: #d50000;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-color);
+  color: var(--primary-text-color);
+}
+
 .App {
   text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
+/* Header and Footer */
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  margin-bottom: 40px;
+}
+
+.App-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0;
+}
+
+.App-header p {
+  color: var(--secondary-text-color);
+  font-size: 1.1rem;
+}
+
+.App-footer {
+  margin-top: 50px;
+  font-size: 0.9rem;
+  color: var(--secondary-text-color);
+}
+
+/* Input Section */
+.input-section {
+  margin-bottom: 40px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 10px;
 }
 
-.App-link {
-  color: #61dafb;
+.wallet-input {
+  width: 500px;
+  padding: 12px 15px;
+  font-size: 1rem;
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--primary-text-color);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.wallet-input::placeholder {
+  color: var(--secondary-text-color);
+}
+
+.fetch-button {
+  padding: 12px 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: var(--accent-color);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.fetch-button:hover {
+  background-color: #a362ea;
+}
+
+
+/* Positions Table */
+.positions-table h2 {
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--surface-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+thead {
+  background-color: #252525;
+}
+
+th {
+  font-weight: bold;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Risk Level Pills */
+.risk-pill {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+}
+
+.risk-low {
+  background-color: var(--risk-low);
+}
+
+.risk-medium {
+  background-color: var(--risk-medium);
+}
+
+.risk-high {
+  background-color: var(--risk-high);
+}
+
+.risk-very-high {
+  background-color: var(--risk-very-high);
 }

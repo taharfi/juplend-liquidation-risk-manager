@@ -1,56 +1,39 @@
-import { loadConfig } from './config.js';
-import { LiquidationBot } from './liquidator.js';
+import express from 'express';
+import cors from 'cors';
+import { PublicKey } from '@solana/web3.js';
 import { Logger } from './logger.js';
-import { TelegramNotifier } from './telegram.js';
+import { fetchPositions } from './liquidator.js';
+import { config } from './config.js';
 
-async function main() {
-  const logger = new Logger(true);
+const app = express();
+const port = process.env.PORT || 3001;
+const logger = new Logger(true);
+
+app.use(cors());
+app.use(express.json());
+
+app.get('/api/positions/:walletAddress', async (req, res) => {
+  const { walletAddress } = req.params;
+  logger.info(`Fetching positions for wallet: ${walletAddress}`);
 
   try {
-    logger.info('Loading configuration...');
-    const config = loadConfig();
-
-    logger.info('Starting Jupiter Lend Liquidation Bot');
-    logger.info('=====================================
-');
-
-    // Initialize Telegram notifier if configured
-    const telegram = new TelegramNotifier(
-      config.telegramBotToken,
-      config.telegramChatId
-    );
-
-    const bot = new LiquidationBot(
-      config.rpcEndpoints,
-      config.walletKeypair,
-      config.minProfitUsd,
-      config.verbose,
-      telegram,
-      config.maxRequestsPerRpc,
-      config.delayBetweenVaults
-    );
-
-    // Handle graceful shutdown
-    const shutdown = async () => {
-      logger.info('\nShutting down gracefully...');
-      logger.stats(bot.getStats());
-
-      // Send shutdown notification
-      if (telegram.isEnabled()) {
-        await telegram.notifyBotStopped(bot.getStats());
-      }
-
-      process.exit(0);
-    };
-
-    process.on('SIGINT', shutdown);
-    process.on('SIGTERM', shutdown);
-
-    await bot.start();
+    // Validate the wallet address
+    new PublicKey(walletAddress);
   } catch (error) {
-    logger.error('Fatal error:', error);
-    process.exit(1);
+    logger.error('Invalid wallet address provided.');
+    return res.status(400).json({ error: 'Invalid wallet address.' });
   }
-}
 
-main();
+  try {
+    // TODO: This will be replaced with real data fetching
+    const positions = await fetchPositions(new PublicKey(walletAddress));
+    res.json(positions);
+  } catch (error) {
+    logger.error('Error fetching positions:', error);
+    res.status(500).json({ error: 'Failed to fetch positions.' });
+  }
+});
+
+app.listen(port, () => {
+  logger.info(`Backend server is running on http://localhost:${port}`);
+});
